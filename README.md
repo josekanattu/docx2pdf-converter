@@ -19,4 +19,4 @@ The endpoint returns the requested file and automatically create a thumbnail. Th
 
 HTTP Request 
 
- `GET http://localhost:3000/createPDF/:filename`
+ `GET http://localhost:3000/convertToPdf/:filename`
