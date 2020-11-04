@@ -6,7 +6,7 @@ const mimeType = require('./mimeType');
 
 const app = express();
 
-app.get('/createPDF/:filename', function (req, res) {
+app.get('/convertToPdf/:filename', function (req, res) {
     convertToPdf(req, res);
 })
 
