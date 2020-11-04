@@ -15,7 +15,7 @@ The server will be listening on port 3000. http://localhost:3000
 ## API Calls
 
 ### Convert to PDF
-The endpoint returns the requested file.
+The endpoint returns the requested file and automatically create a thumbnail. Thumbnail can be seen in thumbs folder.
 
 HTTP Request 
 
