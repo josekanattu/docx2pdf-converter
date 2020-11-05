@@ -3,15 +3,27 @@ const fs = require('fs');
 const path = require('path')
 const { PDFNet } = require('@pdftron/pdfnet-node');
 const mimeType = require('./mimeType');
+const cloudService = require('./services/firebaseService');
 
 const app = express();
 
-app.get('/convertToPdf/:filename', function (req, res) {
-    convertToPdf(req, res);
+app.get('/convertFileFromCloud/:filename', function (req, res) {
+    var file = req.params.filename;
+    convertFileFromCloud(req, res, file);
 })
 
-convertToPdf = (req, res) => {
+convertFileFromCloud = (req, res, filename) => {
+    cloudService.downloadFromCloud(filename).then(data => {
+        convertToPdf(req, res, filename)
+    });
+}
+
+app.get('/convertToPdf/:filename', function (req, res) {
     const filename = req.params.filename;
+    convertToPdf(req, res, filename);
+})
+
+convertToPdf = (req, res, filename) => {
     let ext = path.parse(filename).ext;
     let file = path.parse(filename).name;
 
@@ -29,6 +41,10 @@ convertToPdf = (req, res) => {
         await PDFNet.Convert.toPdf(pdfdoc, inputPath);
         pdfdoc.save(outputPath, PDFNet.SDFDoc.SaveOptions.e_linearized);
         generateThumbnail(file);
+
+        cloudService.uploadToCloud(`${file}.pdf`, 'PDF').then(data => {
+            console.log(data)
+        });
     };
 
     PDFNetEndpoint(main, outputPath, res);
@@ -44,6 +60,9 @@ generateThumbnail = (file) => {
         const pdfdraw = await PDFNet.PDFDraw.create(92);
         const currPage = await doc.getPage(1);
         await pdfdraw.export(currPage, outputPath, 'PNG');
+        cloudService.uploadToCloud(`${file}.png`, 'PNG').then(data => {
+            console.log(data)
+        });
     };
 
     PDFNet.runWithCleanup(main, process.env.PDFTRONKEY)

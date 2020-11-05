@@ -20,3 +20,10 @@ The endpoint returns the requested file and automatically create a thumbnail. Th
 HTTP Request 
 
  `GET http://localhost:3000/convertToPdf/:filename`
+
+### Convert file from cloud
+The endpoint returns the requested file and automatically create a thumbnail. Both thumnail and pdf document is uploaded back to cloud storage.
+
+HTTP Request 
+
+ `GET http://localhost:3000/convertFileFromCloud/:filename`
